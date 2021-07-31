@@ -1,4 +1,3 @@
-
 import csv
 import tkinter as tk
 from tkinter import filedialog
@@ -34,14 +33,16 @@ for page in pages:
         raw = raw.replace('\ufffd', '')
         try:
             bin_or_not = raw.split()[-1]
+            n = len(bin_or_not)
         except IndexError as ie:
             bin_or_not = ''
-        if '-' not in raw and not bin_or_not.isdecimal():
-            address.append(raw)
-        else:
+            n = 0
+        if '-' in raw or (bin_or_not.isdecimal() and n >= 4):
             address.append(raw)
             addresses.append(address)
             address = []
+        else:
+            address.append(raw)
 output = []
 for address in addresses:
     try:
@@ -60,7 +61,7 @@ for address in addresses:
             output.append(creating)
     except IndexError as IE:
         continue
-with open(file_name.replace('.pdf', '.csv'), 'w') as file:
+with open(file_name.replace('.pdf', '.csv'), 'w', newline='') as file:
     writer = csv.writer(file, delimiter=";")
     writer.writerow('sep=;')
     writer.writerows(output)
